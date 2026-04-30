@@ -32,6 +32,7 @@
     <audio id="audio-player" crossorigin="anonymous"></audio>
     
     <div class="flex flex-1 overflow-hidden relative z-10">
+        <!-- SIDEBAR -->
         <aside class="w-16 md:w-56 bg-gray-950/80 backdrop-blur-xl border-r border-white/5 flex flex-col shrink-0 relative">
             <div class="p-4 flex items-center gap-3 border-b border-white/5 justify-center md:justify-start">
                 <div class="bg-blue-600 p-2 rounded-xl shadow-lg shadow-blue-900/20">
@@ -39,18 +40,22 @@
                 </div>
                 <h1 class="text-xl font-black bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent hidden md:block uppercase italic">WaveRadio</h1>
             </div>
+            
             <nav class="p-3 space-y-4 flex-1 overflow-y-auto no-scrollbar">
-                <div class="flex items-center justify-center md:justify-start gap-3 px-3 py-3 bg-white/5 text-blue-400 rounded-xl">
-                    <i data-lucide="radio-receiver" class="w-5 h-5"></i>
-                    <span class="hidden md:block font-bold uppercase text-[10px] tracking-widest text-white">Signal Source</span>
-                </div>
-                <div id="sidebar-now-playing" class="hidden md:block mt-4 px-3 py-3 border-l-2 border-blue-500 bg-blue-500/5 rounded-r-lg">
-                    <p class="text-[8px] font-black uppercase text-blue-500 mb-1">Now Playing</p>
-                    <p id="sidebar-source-name" class="text-[10px] font-bold text-gray-300 truncate uppercase tracking-tighter italic">Waiting...</p>
+                <div>
+                    <div class="flex items-center justify-center md:justify-start gap-3 px-3 py-3 bg-white/5 text-blue-400 rounded-xl">
+                        <i data-lucide="radio-receiver" class="w-5 h-5"></i>
+                        <span class="hidden md:block font-bold uppercase text-[10px] tracking-widest text-white">Signal Source</span>
+                    </div>
+                    <div id="sidebar-now-playing" class="hidden md:block mt-4 px-3 py-3 border-l-2 border-blue-500 bg-blue-500/5 rounded-r-lg">
+                        <p class="text-[8px] font-black uppercase text-blue-500 mb-1">Now Playing</p>
+                        <p id="sidebar-source-name" class="text-[10px] font-bold text-gray-300 truncate uppercase tracking-tighter italic">Waiting...</p>
+                    </div>
                 </div>
             </nav>
         </aside>
 
+        <!-- MAIN CONTENT -->
         <main class="flex-1 overflow-y-auto p-4 md:p-8 no-scrollbar relative pb-32">
             <header class="mb-6">
                 <h2 class="text-3xl font-bold tracking-tight uppercase italic">Pure Electronic</h2>
@@ -60,16 +65,22 @@
             <div id="station-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-12 gap-3 mb-6"></div>
 
             <div class="mb-8 bg-white/5 border border-white/5 rounded-2xl p-4 space-y-4">
-                <div class="flex gap-2">
-                    <input type="text" id="custom-url" placeholder="URL..." class="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-blue-500">
-                    <button onclick="playCustomUrl()" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl text-xs font-bold transition-all uppercase">Load</button>
+                <div>
+                    <h3 class="text-[10px] font-black uppercase text-gray-500 mb-2 flex items-center gap-2"><i data-lucide="link-2" class="w-3 h-3"></i> External Source</h3>
+                    <div class="flex gap-2">
+                        <input type="text" id="custom-url" placeholder="URL..." class="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-blue-500">
+                        <button onclick="playCustomUrl()" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl text-xs font-bold transition-all uppercase">Load</button>
+                    </div>
                 </div>
-                <div class="pt-2 border-t border-white/5 flex items-center gap-2">
-                    <label for="file-input" class="cursor-pointer bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl text-[10px] font-bold uppercase flex items-center gap-2 transition-all">
-                        <i data-lucide="upload" class="w-3 h-3"></i> Files
-                    </label>
-                    <input type="file" id="file-input" accept="audio/*" multiple class="hidden" onchange="loadLocalFiles(event)">
-                    <button id="resume-local-btn" onclick="resumeLocal()" class="hidden bg-orange-600/20 text-orange-400 border border-orange-600/30 px-4 py-2 rounded-xl text-[10px] font-bold uppercase">Resume</button>
+                <div class="pt-2 border-t border-white/5">
+                    <h3 class="text-[10px] font-black uppercase text-gray-500 mb-2 flex items-center gap-2"><i data-lucide="folder-open" class="w-3 h-3"></i> Local Playlist</h3>
+                    <div class="flex items-center gap-2">
+                        <label for="file-input" class="cursor-pointer bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl text-[10px] font-bold uppercase flex items-center gap-2 transition-all">
+                            <i data-lucide="upload" class="w-3 h-3"></i> Files
+                        </label>
+                        <input type="file" id="file-input" accept="audio/*" multiple class="hidden" onchange="loadLocalFiles(event)">
+                        <button id="resume-local-btn" onclick="resumeLocal()" class="hidden bg-orange-600/20 text-orange-400 border border-orange-600/30 px-4 py-2 rounded-xl text-[10px] font-bold uppercase">Resume</button>
+                    </div>
                 </div>
             </div>
 
@@ -77,8 +88,12 @@
                 <canvas id="canvas-viz" class="w-full h-full opacity-80"></canvas>
             </div>
 
-            <div id="history-list" class="flex flex-wrap gap-2 mb-10"></div>
+            <div class="mb-6">
+                <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 flex items-center gap-2"><i data-lucide="history" class="w-3 h-3"></i> Recently Played</h3>
+                <div id="history-list" class="flex flex-wrap gap-2"></div>
+            </div>
 
+            <!-- EQ Panel -->
             <div id="eq-panel" class="fixed bottom-28 right-4 w-64 bg-gray-950/95 backdrop-blur-2xl border border-white/10 p-5 rounded-2xl shadow-2xl scale-95 opacity-0 pointer-events-none transition-all duration-300 z-[60]">
                 <h3 class="text-[10px] font-black uppercase text-blue-500 mb-4 border-b border-white/5 pb-2">Equalizer</h3>
                 <div class="space-y-4 mb-4">
@@ -95,6 +110,7 @@
         </main>
     </div>
 
+    <!-- PLAYER FOOTER -->
     <footer class="h-24 bg-gray-950/90 backdrop-blur-xl border-t border-white/10 px-4 md:px-10 flex items-center justify-between fixed bottom-0 w-full z-30">
         <div class="flex items-center gap-4 w-1/4 md:w-1/3" id="player-info"></div>
         <div class="flex flex-col items-center justify-center w-2/4 md:w-1/3">
@@ -102,7 +118,8 @@
                 <div class="hidden md:flex gap-1 items-end h-4 w-8 justify-end" id="bars-left"></div>
                 <div class="flex items-center gap-1 md:gap-4">
                     <button onclick="playPrev()" class="p-2 text-gray-400 hover:text-white transition-colors"><i data-lucide="skip-back" class="w-4 h-4 md:w-5 md:h-5 fill-current"></i></button>
-                    <button id="main-play-btn" class="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center bg-white text-black rounded-full hover:scale-110 transition-all shadow-lg"><i data-lucide="play" class="w-4 h-4 md:w-6 md:h-6 fill-current ml-1"></i></button>
+                    <!-- ZVÄČŠENÉ TLAČIDLO PRE MOBILE -->
+                    <button id="main-play-btn" class="w-12 h-12 md:w-14 md:h-14 flex items-center justify-center bg-white text-black rounded-full hover:scale-110 active:scale-95 transition-all shadow-lg"><i data-lucide="play" class="w-5 h-5 md:w-6 md:h-6 fill-current ml-1"></i></button>
                     <button onclick="playNext()" class="p-2 text-gray-400 hover:text-white transition-colors"><i data-lucide="skip-forward" class="w-4 h-4 md:w-5 md:h-5 fill-current"></i></button>
                 </div>
                 <div class="hidden md:flex gap-1 items-end h-4 w-8" id="bars-right"></div>
@@ -160,53 +177,75 @@
             drawViz();
         }
 
+        // FIX: Hlavná funkcia pre prepínanie Play/Pause
         async function togglePlay() {
             initAudio();
             if (audioCtx.state === 'suspended') await audioCtx.resume();
-            if (state.isPlaying) { audio.pause(); state.isPlaying = false; }
-            else { if(!audio.src) audio.src = state.current.url; try { await audio.play(); state.isPlaying = true; animateFavicon(); } catch(e) { console.error(e); } }
+            
+            if (state.isPlaying) {
+                audio.pause();
+                state.isPlaying = false;
+            } else {
+                if (!audio.src) audio.src = state.current.url;
+                try {
+                    await audio.play();
+                    state.isPlaying = true;
+                    animateFavicon();
+                } catch(e) { console.log("Playback error", e); }
+            }
             render();
         }
 
         async function playSource(s, addToHistory = true) {
             initAudio();
             if (audioCtx.state === 'suspended') await audioCtx.resume();
-            if (state.current.url === s.url && state.isPlaying) { audio.pause(); state.isPlaying = false; }
-            else {
-                state.current = s; audio.src = s.url;
-                if(addToHistory) { state.history = [s, ...state.history.filter(h => h.url !== s.url)].slice(0, 10); localStorage.setItem('recent-history', JSON.stringify(state.history)); }
-                try { await audio.play(); state.isPlaying = true; animateFavicon(); } catch(e) { state.isPlaying = false; }
+            
+            // Ak klikneme na už hrajúcu stanicu, dáme pauzu
+            if (state.current.url === s.url && state.isPlaying) {
+                audio.pause();
+                state.isPlaying = false;
+            } else {
+                state.current = s;
+                audio.src = s.url;
+                if(addToHistory) {
+                    state.history = [s, ...state.history.filter(h => h.url !== s.url)].slice(0, 10);
+                    localStorage.setItem('recent-history', JSON.stringify(state.history));
+                }
+                try {
+                    await audio.play();
+                    state.isPlaying = true;
+                    animateFavicon();
+                } catch(e) { state.isPlaying = false; }
             }
             render();
         }
 
         function playNext() {
-            const all = [...STATIONS, ...customStations, ...state.localFiles];
+            const all = [...STATIONS, ...customStations];
             const idx = all.findIndex(s => s.url === state.current.url);
             playSource(all[(idx + 1) % all.length]);
         }
 
         function playPrev() {
-            const all = [...STATIONS, ...customStations, ...state.localFiles];
+            const all = [...STATIONS, ...customStations];
             const idx = all.findIndex(s => s.url === state.current.url);
             playSource(all[(idx - 1 + all.length) % all.length]);
         }
 
         function playCustomUrl() {
             const url = document.getElementById('custom-url').value; if(!url) return;
-            const newStation = { id: 'c-'+Date.now(), name: "User Stream", url: url, color: "from-gray-700 to-blue-900", ambient: "#1e3a8a", isCustom: true };
-            customStations.push(newStation); localStorage.setItem('custom-stations', JSON.stringify(customStations));
-            playSource(newStation); document.getElementById('custom-url').value = '';
+            const ns = { id: 'c-'+Date.now(), name: "User Stream", url: url, color: "from-gray-700 to-blue-900", ambient: "#1e3a8a", isCustom: true };
+            customStations.push(ns); localStorage.setItem('custom-stations', JSON.stringify(customStations));
+            playSource(ns); document.getElementById('custom-url').value = '';
         }
 
-        function removeCustomStation(id, e) { e.stopPropagation(); customStations = customStations.filter(s => s.id !== id); localStorage.setItem('custom-stations', JSON.stringify(customStations)); render(); }
-        function loadLocalFiles(event) {
-            const files = Array.from(event.target.files); if (!files.length) return;
+        function loadLocalFiles(e) {
+            const files = Array.from(e.target.files); if (!files.length) return;
             state.localFiles = files.map(f => ({ id: 'l-'+Math.random(), name: f.name.replace(/\.[^/.]+$/, ""), url: URL.createObjectURL(f), color: "from-orange-600 to-red-900", ambient: "#ea580c" }));
-            localStorage.setItem('has-local-playlist', 'true'); document.getElementById('resume-local-btn').classList.remove('hidden');
+            document.getElementById('resume-local-btn').classList.remove('hidden');
             playSource(state.localFiles[0]);
         }
-        function resumeLocal() { if(state.localFiles.length) playSource(state.localFiles[0]); else document.getElementById('file-input').click(); }
+        function resumeLocal() { if(state.localFiles.length) playSource(state.localFiles[0]); }
 
         function updateEQ(save = true) {
             if (!bassNode) return;
@@ -221,13 +260,18 @@
 
         function loadSavedEQ() {
             const saved = JSON.parse(localStorage.getItem('eq-settings')) || {b:6, m:2, t:5};
-            document.getElementById('eq-bass').value = saved.b; document.getElementById('eq-mid').value = saved.m; document.getElementById('eq-treble').value = saved.t;
-            if(bassNode) { bassNode.gain.value = saved.b; midNode.gain.value = saved.m; trebleNode.gain.value = saved.t; }
+            document.getElementById('eq-bass').value = saved.b;
+            document.getElementById('eq-mid').value = saved.m;
+            document.getElementById('eq-treble').value = saved.t;
             updateEQ(false);
         }
 
-        function setPreset(b,m,t) { document.getElementById('eq-bass').value = b; document.getElementById('eq-mid').value = m; document.getElementById('eq-treble').value = t; updateEQ(true); }
-        function nextVizMode(e) { e.preventDefault(); state.vizMode = (state.vizMode + 1) % 3; }
+        function setPreset(b,m,t) { 
+            document.getElementById('eq-bass').value = b; 
+            document.getElementById('eq-mid').value = m; 
+            document.getElementById('eq-treble').value = t; 
+            updateEQ(true); 
+        }
 
         function drawViz() {
             const canvas = document.getElementById('canvas-viz'); const ctx = canvas.getContext('2d');
@@ -252,14 +296,13 @@
         }
 
         function render() {
-            const allStations = [...STATIONS, ...customStations];
-            document.getElementById('station-grid').innerHTML = allStations.map(s => `<div onclick='playSource(${JSON.stringify(s)})' class="cursor-pointer group relative">
-                    ${s.isCustom ? `<button onclick="removeCustomStation('${s.id}', event)" class="absolute -top-1 -right-1 z-20 bg-red-600 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="x" class="w-2 h-2"></i></button>` : ''}
-                    <div class="relative aspect-square rounded-lg bg-gradient-to-br ${s.color} border ${state.current.url === s.url ? 'border-white' : 'border-white/5'} transition-all">
-                        <div class="absolute inset-0 flex items-center justify-center opacity-20"><i data-lucide="disc-3" class="w-10 h-10 ${state.isPlaying && state.current.url === s.url ? 'rotating' : ''}"></i></div>
-                    </div>
-                    <h3 class="text-[8px] font-bold text-center mt-1 uppercase text-gray-400 truncate">${s.name}</h3>
-                </div>`).join('');
+            const all = [...STATIONS, ...customStations];
+            document.getElementById('station-grid').innerHTML = all.map(s => `<div onclick='playSource(${JSON.stringify(s)})' class="cursor-pointer group relative">
+                <div class="relative aspect-square rounded-lg bg-gradient-to-br ${s.color} border ${state.current.url === s.url ? 'border-white' : 'border-white/5'} transition-all">
+                    <div class="absolute inset-0 flex items-center justify-center opacity-20"><i data-lucide="disc-3" class="w-10 h-10 ${state.isPlaying && state.current.url === s.url ? 'rotating' : ''}"></i></div>
+                </div>
+                <h3 class="text-[8px] font-bold text-center mt-1 uppercase text-gray-400 truncate">${s.name}</h3>
+            </div>`).join('');
             
             const historyData = JSON.parse(localStorage.getItem('recent-history')) || [];
             document.getElementById('history-list').innerHTML = historyData.map(s => `<button onclick='playSource(${JSON.stringify(s)}, false)' class="px-2 py-1 bg-white/5 border border-white/10 rounded text-[8px] hover:bg-white/10 transition-all uppercase font-bold">${s.name}</button>`).join('');
@@ -276,21 +319,21 @@
         }
 
         window.onkeydown = (e) => {
-            if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+            if (e.target.tagName === 'INPUT') return;
             if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
             if (e.code === 'ArrowRight') { e.preventDefault(); playNext(); }
             if (e.code === 'ArrowLeft') { e.preventDefault(); playPrev(); }
-            if (e.code === 'ArrowUp') { e.preventDefault(); audio.volume = Math.min(1, audio.volume + 0.05); volSlider.value = audio.volume; }
-            if (e.code === 'ArrowDown') { e.preventDefault(); audio.volume = Math.max(0, audio.volume - 0.05); volSlider.value = audio.volume; }
+            if (e.code === 'ArrowUp') { e.preventDefault(); let nv = Math.min(1, audio.volume + 0.05); audio.volume = nv; volSlider.value = nv; }
+            if (e.code === 'ArrowDown') { e.preventDefault(); let nv = Math.max(0, audio.volume - 0.05); audio.volume = nv; volSlider.value = nv; }
         };
 
+        document.getElementById('main-play-btn').onclick = () => togglePlay();
         document.getElementById('toggle-eq').onclick = (e) => { e.stopPropagation(); document.getElementById('eq-panel').classList.toggle('opacity-0'); document.getElementById('eq-panel').classList.toggle('pointer-events-none'); };
         window.onclick = (e) => { if(!document.getElementById('eq-panel').contains(e.target) && e.target.id !== 'toggle-eq') document.getElementById('eq-panel').classList.add('opacity-0', 'pointer-events-none'); };
         audio.onended = () => playNext(); 
         volSlider.oninput = (e) => audio.volume = e.target.value;
-        document.getElementById('main-play-btn').onclick = () => togglePlay();
 
-        window.onload = () => { render(); audio.volume = 0.7; volSlider.value = 0.7; if(localStorage.getItem('has-local-playlist')) document.getElementById('resume-local-btn').classList.remove('hidden'); const appHeight = () => document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`); window.addEventListener('resize', appHeight); appHeight(); };
+        window.onload = () => { render(); audio.volume = 0.7; volSlider.value = 0.7; const appHeight = () => document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`); window.addEventListener('resize', appHeight); appHeight(); };
     </script>
 </body>
 </html>
