@@ -32,7 +32,6 @@
     <audio id="audio-player" crossorigin="anonymous"></audio>
     
     <div class="flex flex-1 overflow-hidden relative z-10">
-        <!-- SIDEBAR -->
         <aside class="w-16 md:w-56 bg-gray-950/80 backdrop-blur-xl border-r border-white/5 flex flex-col shrink-0 relative">
             <div class="p-4 flex items-center gap-3 border-b border-white/5 justify-center md:justify-start">
                 <div class="bg-blue-600 p-2 rounded-xl shadow-lg shadow-blue-900/20">
@@ -40,22 +39,18 @@
                 </div>
                 <h1 class="text-xl font-black bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent hidden md:block uppercase italic">WaveRadio</h1>
             </div>
-            
             <nav class="p-3 space-y-4 flex-1 overflow-y-auto no-scrollbar">
-                <div>
-                    <div class="flex items-center justify-center md:justify-start gap-3 px-3 py-3 bg-white/5 text-blue-400 rounded-xl">
-                        <i data-lucide="radio-receiver" class="w-5 h-5"></i>
-                        <span class="hidden md:block font-bold uppercase text-[10px] tracking-widest text-white">Signal Source</span>
-                    </div>
-                    <div id="sidebar-now-playing" class="hidden md:block mt-4 px-3 py-3 border-l-2 border-blue-500 bg-blue-500/5 rounded-r-lg">
-                        <p class="text-[8px] font-black uppercase text-blue-500 mb-1">Now Playing</p>
-                        <p id="sidebar-source-name" class="text-[10px] font-bold text-gray-300 truncate uppercase tracking-tighter italic">Waiting...</p>
-                    </div>
+                <div class="flex items-center justify-center md:justify-start gap-3 px-3 py-3 bg-white/5 text-blue-400 rounded-xl">
+                    <i data-lucide="radio-receiver" class="w-5 h-5"></i>
+                    <span class="hidden md:block font-bold uppercase text-[10px] tracking-widest text-white">Signal Source</span>
+                </div>
+                <div id="sidebar-now-playing" class="hidden md:block mt-4 px-3 py-3 border-l-2 border-blue-500 bg-blue-500/5 rounded-r-lg">
+                    <p class="text-[8px] font-black uppercase text-blue-500 mb-1">Now Playing</p>
+                    <p id="sidebar-source-name" class="text-[10px] font-bold text-gray-300 truncate uppercase tracking-tighter italic">Waiting...</p>
                 </div>
             </nav>
         </aside>
 
-        <!-- MAIN CONTENT -->
         <main class="flex-1 overflow-y-auto p-4 md:p-8 no-scrollbar relative pb-32">
             <header class="mb-6">
                 <h2 class="text-3xl font-bold tracking-tight uppercase italic">Pure Electronic</h2>
@@ -65,22 +60,16 @@
             <div id="station-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-12 gap-3 mb-6"></div>
 
             <div class="mb-8 bg-white/5 border border-white/5 rounded-2xl p-4 space-y-4">
-                <div>
-                    <h3 class="text-[10px] font-black uppercase text-gray-500 mb-2 flex items-center gap-2"><i data-lucide="link-2" class="w-3 h-3"></i> External Source</h3>
-                    <div class="flex gap-2">
-                        <input type="text" id="custom-url" placeholder="URL..." class="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-blue-500">
-                        <button onclick="playCustomUrl()" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl text-xs font-bold transition-all uppercase">Load</button>
-                    </div>
+                <div class="flex gap-2">
+                    <input type="text" id="custom-url" placeholder="URL..." class="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-blue-500">
+                    <button onclick="playCustomUrl()" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl text-xs font-bold transition-all uppercase">Load</button>
                 </div>
-                <div class="pt-2 border-t border-white/5">
-                    <h3 class="text-[10px] font-black uppercase text-gray-500 mb-2 flex items-center gap-2"><i data-lucide="folder-open" class="w-3 h-3"></i> Local Playlist</h3>
-                    <div class="flex items-center gap-2">
-                        <label for="file-input" class="cursor-pointer bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl text-[10px] font-bold uppercase flex items-center gap-2 transition-all">
-                            <i data-lucide="upload" class="w-3 h-3"></i> Files
-                        </label>
-                        <input type="file" id="file-input" accept="audio/*" multiple class="hidden" onchange="loadLocalFiles(event)">
-                        <button id="resume-local-btn" onclick="resumeLocal()" class="hidden bg-orange-600/20 text-orange-400 border border-orange-600/30 px-4 py-2 rounded-xl text-[10px] font-bold uppercase">Resume</button>
-                    </div>
+                <div class="pt-2 border-t border-white/5 flex items-center gap-2">
+                    <label for="file-input" class="cursor-pointer bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl text-[10px] font-bold uppercase flex items-center gap-2 transition-all">
+                        <i data-lucide="upload" class="w-3 h-3"></i> Files
+                    </label>
+                    <input type="file" id="file-input" accept="audio/*" multiple class="hidden" onchange="loadLocalFiles(event)">
+                    <button id="resume-local-btn" onclick="resumeLocal()" class="hidden bg-orange-600/20 text-orange-400 border border-orange-600/30 px-4 py-2 rounded-xl text-[10px] font-bold uppercase">Resume</button>
                 </div>
             </div>
 
@@ -88,18 +77,8 @@
                 <canvas id="canvas-viz" class="w-full h-full opacity-80"></canvas>
             </div>
 
-            <div class="mb-6">
-                <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-3 flex items-center gap-2"><i data-lucide="history" class="w-3 h-3"></i> Recently Played</h3>
-                <div id="history-list" class="flex flex-wrap gap-2"></div>
-            </div>
+            <div id="history-list" class="flex flex-wrap gap-2 mb-10"></div>
 
-            <div class="mb-10 pt-4 border-t border-white/5">
-                <p class="text-[9px] text-gray-600 uppercase tracking-widest leading-relaxed opacity-50 italic">
-                    Non-commercial player. All streams are property of their respective broadcasters.
-                </p>
-            </div>
-
-            <!-- EQ Panel -->
             <div id="eq-panel" class="fixed bottom-28 right-4 w-64 bg-gray-950/95 backdrop-blur-2xl border border-white/10 p-5 rounded-2xl shadow-2xl scale-95 opacity-0 pointer-events-none transition-all duration-300 z-[60]">
                 <h3 class="text-[10px] font-black uppercase text-blue-500 mb-4 border-b border-white/5 pb-2">Equalizer</h3>
                 <div class="space-y-4 mb-4">
@@ -116,7 +95,6 @@
         </main>
     </div>
 
-    <!-- PLAYER FOOTER -->
     <footer class="h-24 bg-gray-950/90 backdrop-blur-xl border-t border-white/10 px-4 md:px-10 flex items-center justify-between fixed bottom-0 w-full z-30">
         <div class="flex items-center gap-4 w-1/4 md:w-1/3" id="player-info"></div>
         <div class="flex flex-col items-center justify-center w-2/4 md:w-1/3">
@@ -157,13 +135,8 @@
             if (titleInterval) { clearInterval(titleInterval); titleInterval = null; }
             if (state.isPlaying) {
                 let titleText = `NOW PLAYING: ${state.current.name} --- `;
-                titleInterval = setInterval(() => {
-                    titleText = titleText.substring(1) + titleText.substring(0, 1);
-                    document.title = titleText;
-                }, 300);
-            } else {
-                document.title = "WaveRadio - Pure Dance & Trance";
-            }
+                titleInterval = setInterval(() => { titleText = titleText.substring(1) + titleText.substring(0, 1); document.title = titleText; }, 300);
+            } else { document.title = "WaveRadio - Pure Dance & Trance"; }
         }
 
         function animateFavicon() {
@@ -183,33 +156,40 @@
             midNode = audioCtx.createBiquadFilter(); midNode.type = 'peaking'; midNode.frequency.value = 1000;
             trebleNode = audioCtx.createBiquadFilter(); trebleNode.type = 'highshelf'; trebleNode.frequency.value = 3000;
             source.connect(bassNode).connect(midNode).connect(trebleNode).connect(analyser).connect(audioCtx.destination);
-            
-            // PRI ŠTARTE: Najprv skúsime načítať pamäť, ak je prázdna, použijeme Techno (6,2,5)
-            const saved = JSON.parse(localStorage.getItem('eq-settings'));
-            if(saved) {
-                bassNode.gain.value = saved.b;
-                midNode.gain.value = saved.m;
-                trebleNode.gain.value = saved.t;
-            } else {
-                setPreset(6, 2, 5); // Default: Techno
-            }
-            updateEQ(false); 
+            loadSavedEQ();
             drawViz();
         }
 
+        async function togglePlay() {
+            initAudio();
+            if (audioCtx.state === 'suspended') await audioCtx.resume();
+            if (state.isPlaying) { audio.pause(); state.isPlaying = false; }
+            else { if(!audio.src) audio.src = state.current.url; try { await audio.play(); state.isPlaying = true; animateFavicon(); } catch(e) { console.error(e); } }
+            render();
+        }
+
         async function playSource(s, addToHistory = true) {
-            initAudio(); if (audioCtx.state === 'suspended') audioCtx.resume();
-            if (state.current.url === s.url && state.isPlaying && !s.id.toString().startsWith('l-')) {
-                audio.pause(); state.isPlaying = false;
-            } else {
+            initAudio();
+            if (audioCtx.state === 'suspended') await audioCtx.resume();
+            if (state.current.url === s.url && state.isPlaying) { audio.pause(); state.isPlaying = false; }
+            else {
                 state.current = s; audio.src = s.url;
-                if(addToHistory) {
-                    state.history = [s, ...state.history.filter(h => h.url !== s.url)].slice(0, 10);
-                    localStorage.setItem('recent-history', JSON.stringify(state.history));
-                }
+                if(addToHistory) { state.history = [s, ...state.history.filter(h => h.url !== s.url)].slice(0, 10); localStorage.setItem('recent-history', JSON.stringify(state.history)); }
                 try { await audio.play(); state.isPlaying = true; animateFavicon(); } catch(e) { state.isPlaying = false; }
             }
             render();
+        }
+
+        function playNext() {
+            const all = [...STATIONS, ...customStations, ...state.localFiles];
+            const idx = all.findIndex(s => s.url === state.current.url);
+            playSource(all[(idx + 1) % all.length]);
+        }
+
+        function playPrev() {
+            const all = [...STATIONS, ...customStations, ...state.localFiles];
+            const idx = all.findIndex(s => s.url === state.current.url);
+            playSource(all[(idx - 1 + all.length) % all.length]);
         }
 
         function playCustomUrl() {
@@ -219,29 +199,14 @@
             playSource(newStation); document.getElementById('custom-url').value = '';
         }
 
-        function removeCustomStation(id, e) {
-            e.stopPropagation(); customStations = customStations.filter(s => s.id !== id);
-            localStorage.setItem('custom-stations', JSON.stringify(customStations)); render();
-        }
-
+        function removeCustomStation(id, e) { e.stopPropagation(); customStations = customStations.filter(s => s.id !== id); localStorage.setItem('custom-stations', JSON.stringify(customStations)); render(); }
         function loadLocalFiles(event) {
             const files = Array.from(event.target.files); if (!files.length) return;
             state.localFiles = files.map(f => ({ id: 'l-'+Math.random(), name: f.name.replace(/\.[^/.]+$/, ""), url: URL.createObjectURL(f), color: "from-orange-600 to-red-900", ambient: "#ea580c" }));
             localStorage.setItem('has-local-playlist', 'true'); document.getElementById('resume-local-btn').classList.remove('hidden');
-            state.localIndex = 0; playSource(state.localFiles[0]);
+            playSource(state.localFiles[0]);
         }
-
-        function resumeLocal() { if(state.localFiles.length) playSource(state.localFiles[state.localIndex]); else document.getElementById('file-input').click(); }
-
-        function playNext() {
-            if (state.localFiles.length > 0) { state.localIndex = (state.localIndex + 1) % state.localFiles.length; playSource(state.localFiles[state.localIndex]); }
-            else { const all = [...STATIONS, ...customStations]; const idx = all.findIndex(s => s.url === state.current.url); playSource(all[(idx + 1) % all.length]); }
-        }
-
-        function playPrev() {
-            if (state.localFiles.length > 0) { state.localIndex = (state.localIndex - 1 + state.localFiles.length) % state.localFiles.length; playSource(state.localFiles[state.localIndex]); }
-            else { const all = [...STATIONS, ...customStations]; const idx = all.findIndex(s => s.url === state.current.url); playSource(all[(idx - 1 + all.length) % all.length]); }
-        }
+        function resumeLocal() { if(state.localFiles.length) playSource(state.localFiles[0]); else document.getElementById('file-input').click(); }
 
         function updateEQ(save = true) {
             if (!bassNode) return;
@@ -255,30 +220,13 @@
         }
 
         function loadSavedEQ() {
-            const saved = JSON.parse(localStorage.getItem('eq-settings'));
-            if(saved) { 
-                document.getElementById('eq-bass').value = saved.b; 
-                document.getElementById('eq-mid').value = saved.m; 
-                document.getElementById('eq-treble').value = saved.t; 
-            } else {
-                // Ak nie je v pamäti nič, nastavíme vizuálne posuvníky na TECHNO preset
-                document.getElementById('eq-bass').value = 6; 
-                document.getElementById('eq-mid').value = 2; 
-                document.getElementById('eq-treble').value = 5; 
-            }
-            // Aktualizujeme čísla textovo
-            document.getElementById('v-bass').innerText = document.getElementById('eq-bass').value + 'dB';
-            document.getElementById('v-mid').innerText = document.getElementById('eq-mid').value + 'dB';
-            document.getElementById('v-treble').innerText = document.getElementById('eq-treble').value + 'dB';
+            const saved = JSON.parse(localStorage.getItem('eq-settings')) || {b:6, m:2, t:5};
+            document.getElementById('eq-bass').value = saved.b; document.getElementById('eq-mid').value = saved.m; document.getElementById('eq-treble').value = saved.t;
+            if(bassNode) { bassNode.gain.value = saved.b; midNode.gain.value = saved.m; trebleNode.gain.value = saved.t; }
+            updateEQ(false);
         }
 
-        function setPreset(b,m,t) { 
-            document.getElementById('eq-bass').value = b; 
-            document.getElementById('eq-mid').value = m; 
-            document.getElementById('eq-treble').value = t; 
-            updateEQ(true); 
-        }
-
+        function setPreset(b,m,t) { document.getElementById('eq-bass').value = b; document.getElementById('eq-mid').value = m; document.getElementById('eq-treble').value = t; updateEQ(true); }
         function nextVizMode(e) { e.preventDefault(); state.vizMode = (state.vizMode + 1) % 3; }
 
         function drawViz() {
@@ -305,8 +253,7 @@
 
         function render() {
             const allStations = [...STATIONS, ...customStations];
-            const grid = document.getElementById('station-grid');
-            grid.innerHTML = allStations.map(s => `<div onclick='playSource(${JSON.stringify(s)})' class="cursor-pointer group relative">
+            document.getElementById('station-grid').innerHTML = allStations.map(s => `<div onclick='playSource(${JSON.stringify(s)})' class="cursor-pointer group relative">
                     ${s.isCustom ? `<button onclick="removeCustomStation('${s.id}', event)" class="absolute -top-1 -right-1 z-20 bg-red-600 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="x" class="w-2 h-2"></i></button>` : ''}
                     <div class="relative aspect-square rounded-lg bg-gradient-to-br ${s.color} border ${state.current.url === s.url ? 'border-white' : 'border-white/5'} transition-all">
                         <div class="absolute inset-0 flex items-center justify-center opacity-20"><i data-lucide="disc-3" class="w-10 h-10 ${state.isPlaying && state.current.url === s.url ? 'rotating' : ''}"></i></div>
@@ -315,59 +262,35 @@
                 </div>`).join('');
             
             const historyData = JSON.parse(localStorage.getItem('recent-history')) || [];
-            const hist = document.getElementById('history-list');
-            hist.innerHTML = historyData.map(s => `<button onclick='playSource(${JSON.stringify(s)}, false)' class="px-2 py-1 bg-white/5 border border-white/10 rounded text-[8px] hover:bg-white/10 transition-all uppercase font-bold">${s.name}</button>`).join('') || '<p class="text-[8px] text-gray-700 italic uppercase">No history...</p>';
+            document.getElementById('history-list').innerHTML = historyData.map(s => `<button onclick='playSource(${JSON.stringify(s)}, false)' class="px-2 py-1 bg-white/5 border border-white/10 rounded text-[8px] hover:bg-white/10 transition-all uppercase font-bold">${s.name}</button>`).join('');
             
             document.getElementById('sidebar-source-name').innerText = state.current.name;
-            const info = document.getElementById('player-info');
-            info.innerHTML = `<div class="w-10 h-10 md:w-12 md:h-12 rounded-full vinyl-disc flex items-center justify-center ${state.isPlaying ? 'rotating' : ''} shadow-xl overflow-hidden">
-                    <div class="vinyl-reflection"></div>
-                    <div class="w-2 h-2 md:w-3 md:h-3 bg-black rounded-full border border-white/20 z-10"></div>
-                </div>
-                <div class="overflow-hidden max-w-[80px] md:max-w-[150px]">
-                    <h4 class="font-bold text-[10px] md:text-sm text-white truncate">${state.current.name}</h4>
-                    <p class="text-[8px] md:text-[10px] text-blue-400 font-black uppercase tracking-widest">${state.isPlaying ? 'On Air' : 'Paused'}</p>
-                </div>`;
+            document.getElementById('player-info').innerHTML = `<div class="w-10 h-10 md:w-12 md:h-12 rounded-full vinyl-disc flex items-center justify-center ${state.isPlaying ? 'rotating' : ''} shadow-xl overflow-hidden"><div class="vinyl-reflection"></div><div class="w-2 h-2 md:w-3 md:h-3 bg-black rounded-full border border-white/20 z-10"></div></div><div class="overflow-hidden max-w-[80px] md:max-w-[150px]"><h4 class="font-bold text-[10px] md:text-sm text-white truncate">${state.current.name}</h4><p class="text-[8px] md:text-[10px] text-blue-400 font-black uppercase tracking-widest">${state.isPlaying ? 'On Air' : 'Paused'}</p></div>`;
             
             const barHTML = state.isPlaying ? '<div class="music-bar bar-anim"></div><div class="music-bar bar-anim bar-2"></div><div class="music-bar bar-anim bar-3"></div>' : '';
-            document.getElementById('bars-left').innerHTML = barHTML; 
-            document.getElementById('bars-right').innerHTML = barHTML;
+            document.getElementById('bars-left').innerHTML = barHTML; document.getElementById('bars-right').innerHTML = barHTML;
             document.getElementById('logo-icon').classList.toggle('rotating', state.isPlaying);
-            
-            if (!state.isPlaying) document.getElementById('favicon').href = "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💿</text></svg>";
             document.getElementById('main-play-btn').innerHTML = state.isPlaying ? '<i data-lucide="pause" class="fill-current"></i>' : '<i data-lucide="play" class="fill-current ml-1"></i>';
             document.getElementById('ambient-glow').style.background = state.isPlaying ? `radial-gradient(circle at center, ${state.current.ambient} 0%, transparent 70%)` : 'transparent';
-            
-            updatePageTitle();
-            lucide.createIcons();
+            updatePageTitle(); lucide.createIcons();
         }
 
         window.onkeydown = (e) => {
-            if (e.target.tagName === 'INPUT') return;
-            if (e.code === 'Space') { e.preventDefault(); if (state.isPlaying) audio.pause(); else audio.play(); state.isPlaying = !state.isPlaying; render(); }
+            if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+            if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
             if (e.code === 'ArrowRight') { e.preventDefault(); playNext(); }
             if (e.code === 'ArrowLeft') { e.preventDefault(); playPrev(); }
-            if (e.code === 'ArrowUp') { e.preventDefault(); let nv = Math.min(1, audio.volume + 0.05); audio.volume = nv; volSlider.value = nv; }
-            if (e.code === 'ArrowDown') { e.preventDefault(); let nv = Math.max(0, audio.volume - 0.05); audio.volume = nv; volSlider.value = nv; }
+            if (e.code === 'ArrowUp') { e.preventDefault(); audio.volume = Math.min(1, audio.volume + 0.05); volSlider.value = audio.volume; }
+            if (e.code === 'ArrowDown') { e.preventDefault(); audio.volume = Math.max(0, audio.volume - 0.05); volSlider.value = audio.volume; }
         };
 
         document.getElementById('toggle-eq').onclick = (e) => { e.stopPropagation(); document.getElementById('eq-panel').classList.toggle('opacity-0'); document.getElementById('eq-panel').classList.toggle('pointer-events-none'); };
         window.onclick = (e) => { if(!document.getElementById('eq-panel').contains(e.target) && e.target.id !== 'toggle-eq') document.getElementById('eq-panel').classList.add('opacity-0', 'pointer-events-none'); };
         audio.onended = () => playNext(); 
         volSlider.oninput = (e) => audio.volume = e.target.value;
-        document.getElementById('main-play-btn').onclick = () => playSource(state.current);
+        document.getElementById('main-play-btn').onclick = () => togglePlay();
 
-        window.onload = () => { 
-            // Načítame vizuálny stav sliderov z pamäte alebo default Techno
-            loadSavedEQ();
-            if(localStorage.getItem('has-local-playlist')) document.getElementById('resume-local-btn').classList.remove('hidden'); 
-            render(); 
-            audio.volume = 0.7; 
-            volSlider.value = 0.7; 
-            const appHeight = () => document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`); 
-            window.addEventListener('resize', appHeight); 
-            appHeight(); 
-        };
+        window.onload = () => { render(); audio.volume = 0.7; volSlider.value = 0.7; if(localStorage.getItem('has-local-playlist')) document.getElementById('resume-local-btn').classList.remove('hidden'); const appHeight = () => document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`); window.addEventListener('resize', appHeight); appHeight(); };
     </script>
 </body>
 </html>
