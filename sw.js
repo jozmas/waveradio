@@ -1,4 +1,4 @@
-const CACHE_NAME = 'waveradio-v1';
+const CACHE_NAME = 'waveradio-v2'; // v2
 const ASSETS = [
   './',
   './index.html',
@@ -11,6 +11,19 @@ self.addEventListener('install', (e) => {
     caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
   );
   self.skipWaiting();
+});
+
+// This block clears the old cache, which helps when updating the app
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME) return caches.delete(key);
+        })
+      );
+    })
+  );
 });
 
 self.addEventListener('fetch', (e) => {
