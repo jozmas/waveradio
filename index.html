@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!DOCTYPE html><html lang="en"><head>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QT4GHFHTVS"></script>
     <script>
@@ -9,7 +7,7 @@
       gtag('js', new Date());
       gtag('config', 'G-QT4GHFHTVS');
     </script>
-            
+                
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="robots" content="noindex, nofollow">
@@ -18,16 +16,16 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="WaveRadio">
     <title>WaveRadio - Pure Dance & Trance</title>
-        
-    <!-- PWA Manifest for installation -->
-    <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIldhdmVSYWRpbyIsCiAgInNob3J0X25hbWUiOiAiV2F2ZVJhZGlvIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwMDAwMDAiLAogICJ0aGVtZV9jb2xvciI6ICIjMDAwMDAwIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgdmlld0JveD0lMjIwIDAgMTAwIDEwMCUyMiB4bWxucz0lMjJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyUyMlw+PHRleHQgeT0lMjIuOWVtJTIyIGZvbnQtc2l6ZT0lMjI5MCUyMlw+8J+SlzwvdGV4dD48L3N2Zz4iLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
-        
+            
+    <!-- PWA Manifest (Fix pre Chrome/Brave) -->
+    <link id="manifest-link" rel="manifest">
+
     <link id="favicon" rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💿</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💿</text></svg>">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-        
+            
     <style>
         :root { --app-height: 100%; }
         /* Prevent scrollbars and bounce effect on Mac/iOS */
@@ -108,7 +106,7 @@
             </header>
 
             <div id="station-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-12 gap-3 mb-6"></div>
-
+            
             <div class="mb-8 bg-white/5 border border-white/5 rounded-2xl p-4 space-y-4">
                 <div>
                     <h3 class="text-[10px] font-black uppercase text-gray-500 mb-2 flex items-center gap-2"><i data-lucide="link-2" class="w-3 h-3"></i> External Source</h3>
@@ -184,17 +182,35 @@
     </footer>
 
     <script>
-        // SERVICE WORKER FOR PWA (Installation)
+        // --- PWA FIX (CALM OF NATURE STYLE) ---
+        const manifestData = {
+            "name": "WaveRadio",
+            "short_name": "WaveRadio",
+            "start_url": ".",
+            "display": "standalone",
+            "background_color": "#000000",
+            "theme_color": "#000000",
+            "icons": [{
+                "src": "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22black%22/><text y=%22.9em%22 font-size=%2280%22 x=%2210%22>💿</text></svg>",
+                "sizes": "512x512",
+                "type": "image/svg+xml",
+                "purpose": "any maskable"
+            }]
+        };
+        const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
+        document.getElementById('manifest-link').href = URL.createObjectURL(manifestBlob);
+
         if ('serviceWorker' in navigator) {
             const swCode = `
                 self.addEventListener('install', (e) => self.skipWaiting());
-                self.addEventListener('fetch', (e) => e.respondWith(fetch(e.request)));
+                self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
+                self.addEventListener('fetch', (e) => e.respondWith(fetch(e.request).catch(() => {})));
             `;
-            const blob = new Blob([swCode], {type: 'text/javascript'});
-            const swUrl = URL.createObjectURL(blob);
-            navigator.serviceWorker.register(swUrl).catch(err => console.log('SW error', err));
+            const swBlob = new Blob([swCode], {type: 'text/javascript'});
+            navigator.serviceWorker.register(URL.createObjectURL(swBlob));
         }
 
+        // --- TVOJ POVODNY KOD (ZACHOVANY) ---
         const STATIONS = [
             { id: 4, name: "ILove Dance", url: "https://streams.ilovemusic.de/iloveradio2.mp3", color: "from-pink-600 to-blue-600", ambient: "#db2777" },
             { id: 2, name: "ILove Trance", url: "https://streams.ilovemusic.de/iloveradio10.mp3", color: "from-blue-400 to-blue-800", ambient: "#1e40af" },
@@ -204,7 +220,7 @@
         ];
         let customStations = JSON.parse(localStorage.getItem('custom-stations')) || [];
         let state = { current: STATIONS[0], isPlaying: false, vizMode: 1, localFiles: [], history: [], isNoiseOn: false, sleepTimer: null };
-                
+                        
         const audio = document.getElementById('audio-player');
         const noiseAudio = document.getElementById('noise-player');
         const volSlider = document.getElementById('volume-slider');
@@ -366,9 +382,9 @@
         }
 
         function setPreset(b,m,t) { 
-            document.getElementById('eq-bass').value = b; document.getElementById('eq-mid').value = m; document.getElementById('eq-treble').value = t; 
-            updateEQ(true); 
-        }
+             document.getElementById('eq-bass').value = b; document.getElementById('eq-mid').value = m; document.getElementById('eq-treble').value = t; 
+             updateEQ(true); 
+         }
 
         function nextVizMode(e) { e.preventDefault(); state.vizMode = (state.vizMode + 1) % 3; }
 
@@ -404,22 +420,22 @@
                 </div>
                 <h3 class="text-[8px] font-bold text-center mt-1 uppercase text-gray-400 truncate px-1">${s.name}</h3>
             </div>`).join('');
-                        
+                                    
             const historyData = JSON.parse(localStorage.getItem('recent-history')) || [];
             document.getElementById('history-list').innerHTML = historyData.map(s => `<button onclick='playSource(${JSON.stringify(s)}, false)' class="px-2 py-1 bg-white/5 border border-white/10 rounded text-[8px] hover:bg-white/10 transition-all uppercase font-bold">${s.name}</button>`).join('') || '<p class="text-[8px] text-gray-700 italic uppercase">No history...</p>';
-                        
+                                    
             document.getElementById('sidebar-source-name').innerText = state.current.name;
             document.getElementById('player-info').innerHTML = `<div class="w-10 h-10 md:w-12 md:h-12 rounded-full vinyl-disc flex items-center justify-center ${state.isPlaying ? 'rotating' : ''} shadow-xl overflow-hidden"><div class="vinyl-reflection"></div><div class="w-2 h-2 md:w-3 md:h-3 bg-black rounded-full border border-white/20 z-10"></div></div><div class="overflow-hidden max-w-[80px] md:max-w-[150px]"><h4 class="font-bold text-[10px] md:text-sm text-white truncate">${state.current.name}</h4><p class="text-[8px] md:text-[10px] text-blue-400 font-black uppercase tracking-widest">${state.isPlaying ? 'On Air' : 'Paused'}</p></div>`;
-                        
+                                    
             const barHTML = state.isPlaying ? '<div class="music-bar bar-anim"></div><div class="music-bar bar-anim bar-2"></div><div class="music-bar bar-anim bar-3"></div>' : '';
             document.getElementById('bars-left').innerHTML = barHTML; document.getElementById('bars-right').innerHTML = barHTML;
             document.getElementById('logo-icon').classList.toggle('rotating', state.isPlaying);
             document.getElementById('main-play-btn').innerHTML = state.isPlaying ? '<i data-lucide="pause" class="fill-current"></i>' : '<i data-lucide="play" class="fill-current ml-1"></i>';
             document.getElementById('ambient-glow').style.background = state.isPlaying ? `radial-gradient(circle at center, ${state.current.ambient} 0%, transparent 70%)` : 'transparent';
-                        
+                                    
             const sleepBtn = document.getElementById('sleep-btn');
             if (state.sleepTimer) { sleepBtn.classList.add('text-purple-400'); } else { sleepBtn.classList.remove('text-purple-400'); }
-                        
+                                    
             updatePageTitle(); lucide.createIcons();
         }
 
@@ -439,13 +455,12 @@
         volSlider.oninput = (e) => audio.volume = e.target.value;
 
         window.onload = () => { 
-            render(); 
-            audio.volume = 0.7; 
-            volSlider.value = 0.7; 
-            const appHeight = () => document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`); 
-            window.addEventListener('resize', appHeight); 
-            appHeight(); 
-        };
+             render(); 
+             audio.volume = 0.7; 
+             volSlider.value = 0.7; 
+             const appHeight = () => document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`); 
+             window.addEventListener('resize', appHeight); 
+             appHeight(); 
+         };
     </script>
-</body>
-</html>
+</body></html>
