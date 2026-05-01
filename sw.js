@@ -1,12 +1,20 @@
+const CACHE_NAME = 'waveradio-v1';
+const ASSETS = [
+  './',
+  './index.html',
+  './manifest.json',
+  './icon.png'
+];
+
 self.addEventListener('install', (e) => {
-  console.log('WaveRadio SW installed');
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+  );
   self.skipWaiting();
 });
 
-self.addEventListener('activate', (e) => {
-  console.log('WaveRadio SW activated');
-});
-
 self.addEventListener('fetch', (e) => {
-  // Tento prázdny handler stačí na to, aby Chrome povolil inštaláciu
+  e.respondWith(
+    fetch(e.request).catch(() => caches.match(e.request))
+  );
 });
