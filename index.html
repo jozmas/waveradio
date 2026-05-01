@@ -20,8 +20,8 @@
     
     <title>WaveRadio - Pure Dance & Trance</title>
 
-<!-- PWA Manifest for installation -->
-<link rel="manifest" href="manifest.json">
+    <!-- PWA Manifest for installation -->
+    <link rel="manifest" href="manifest.json">
 
     <link id="favicon" rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💿</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💿</text></svg>">
@@ -32,7 +32,6 @@
     <style>
         :root { --app-height: 100%; }
         
-        /* Prevent scrollbars and bounce effect on Mac/iOS */
         html, body {
             overflow: hidden !important;
             height: 100%;
@@ -41,7 +40,6 @@
             transition: background 1.5s ease;
         }
 
-        /* Complete scrollbar hide */
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
@@ -157,9 +155,10 @@
                     <h3 class="text-[10px] font-black uppercase text-gray-500 mb-2 flex items-center gap-2">
                         <i data-lucide="link-2" class="w-3 h-3"></i> External Source
                     </h3>
-                    <div class="flex gap-2">
-                        <input type="text" id="custom-url" placeholder="URL..." class="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-blue-500">
-                        <button onclick="playCustomUrl()" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl text-xs font-bold transition-all uppercase">Load</button>
+                    <!-- OPRAVENÝ FLEX BOX PRE MOBIL -->
+                    <div class="flex flex-wrap md:flex-nowrap gap-2">
+                        <input type="text" id="custom-url" placeholder="URL..." class="flex-1 min-w-[120px] bg-black/40 border border-white/10 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-blue-500">
+                        <button onclick="playCustomUrl()" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-xl text-xs font-bold transition-all uppercase whitespace-nowrap">Load</button>
                     </div>
                 </div>
                 
@@ -258,13 +257,13 @@
 
     <script>
         // SERVICE WORKER FOR PWA
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('Service Worker beží!', reg))
-            .catch(err => console.log('Chyba SW:', err));
-    });
-}
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker beží!', reg))
+                    .catch(err => console.log('Chyba SW:', err));
+            });
+        }
 
         const STATIONS = [
             { id: 4, name: "ILove Dance", url: "https://streams.ilovemusic.de/iloveradio2.mp3", color: "from-pink-600 to-blue-600", ambient: "#db2777" },
@@ -287,6 +286,25 @@ if ('serviceWorker' in navigator) {
         favCanvas.width = 32; favCanvas.height = 32;
         const favCtx = favCanvas.getContext('2d'); 
         let favRotation = 0;
+
+        // NOVINKA: MEDIA SESSION API (Pre lock-screen a stabilitu)
+        function updateMediaSession() {
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: state.current.name,
+                    artist: 'WaveRadio Pure',
+                    album: 'Dance & Trance',
+                    artwork: [
+                        { src: 'https://cdn-icons-png.flaticon.com/512/10450/10450050.png', sizes: '512x512', type: 'image/png' }
+                    ]
+                });
+
+                navigator.mediaSession.setActionHandler('play', () => togglePlay());
+                navigator.mediaSession.setActionHandler('pause', () => togglePlay());
+                navigator.mediaSession.setActionHandler('previoustrack', () => playPrev());
+                navigator.mediaSession.setActionHandler('nexttrack', () => playNext());
+            }
+        }
 
         function updatePageTitle() {
             if (titleInterval) { clearInterval(titleInterval); titleInterval = null; }
@@ -362,6 +380,7 @@ if ('serviceWorker' in navigator) {
                     audio.pause();
                     state.isPlaying = false;
                     state.sleepTimer = null;
+                    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
                     render();
                 }, 30 * 60 * 1000);
                 document.getElementById('sleep-btn').classList.add('text-purple-400');
@@ -375,11 +394,14 @@ if ('serviceWorker' in navigator) {
             if (state.isPlaying) {
                 audio.pause();
                 state.isPlaying = false;
+                if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
             } else {
                 if (!audio.src || audio.src === window.location.href) audio.src = state.current.url;
                 try {
                     await audio.play();
                     state.isPlaying = true;
+                    updateMediaSession();
+                    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
                     animateFavicon();
                 } catch(e) { console.error("Playback failed", e); }
             }
@@ -392,6 +414,7 @@ if ('serviceWorker' in navigator) {
             if (state.current.url === s.url && state.isPlaying) {
                 audio.pause();
                 state.isPlaying = false;
+                if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
             } else {
                 state.current = s;
                 audio.src = s.url;
@@ -402,6 +425,8 @@ if ('serviceWorker' in navigator) {
                 try {
                     await audio.play();
                     state.isPlaying = true;
+                    updateMediaSession();
+                    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "playing";
                     animateFavicon();
                 } catch(e) { state.isPlaying = false; }
             }
@@ -582,10 +607,6 @@ if ('serviceWorker' in navigator) {
             document.getElementById('logo-icon').classList.toggle('rotating', state.isPlaying);
             document.getElementById('main-play-btn').innerHTML = state.isPlaying ? '<i data-lucide="pause" class="fill-current"></i>' : '<i data-lucide="play" class="fill-current ml-1"></i>';
             document.getElementById('ambient-glow').style.background = state.isPlaying ? `radial-gradient(circle at center, ${state.current.ambient} 0%, transparent 70%)` : 'transparent';
-            
-            const sleepBtn = document.getElementById('sleep-btn');
-            if (state.sleepTimer) { sleepBtn.classList.add('text-purple-400'); } 
-            else { sleepBtn.classList.remove('text-purple-400'); }
             
             updatePageTitle(); 
             lucide.createIcons();
