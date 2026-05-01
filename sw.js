@@ -1,10 +1,13 @@
-const CACHE_NAME = 'waveradio-v1';
-
 self.addEventListener('install', (event) => {
-    self.skipWaiting();
+  event.waitUntil(
+    caches.open('waveradio-v1').then((cache) => {
+      return cache.addAll(['./']);
+    })
+  );
 });
 
 self.addEventListener('fetch', (event) => {
-    // Toto zabezpečí, že streamy budú fungovať aj cez service worker
-    event.respondWith(fetch(event.request));
+  event.respondWith(
+    fetch(event.request).catch(() => caches.match(event.request))
+  );
 });
