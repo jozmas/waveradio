@@ -1,5 +1,5 @@
 {
-  "id": "/waveradio/index.html",
+  "id": "/waveradio/",
   "name": "WaveRadio Pure",
   "short_name": "WaveRadio",
   "description": "Pure Dance & Trance Radio",
@@ -17,16 +17,17 @@
   ],
   "screenshots": [
     {
-      "src": "https://raw.githubusercontent.com/jozmas/my-images/main/icon.png",
+      "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "form_factor": "wide",
       "label": "WaveRadio Desktop"
     },
     {
-      "src": "https://raw.githubusercontent.com/jozmas/my-images/main/icon.png",
+      "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png",
+      "form_factor": "narrow",
       "label": "WaveRadio Mobile"
     }
   ]
