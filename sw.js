@@ -1,7 +1,12 @@
 self.addEventListener('install', (e) => {
-  console.log('SW Installed');
+  console.log('WaveRadio SW installed');
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (e) => {
+  console.log('WaveRadio SW activated');
 });
 
 self.addEventListener('fetch', (e) => {
-  // Povinné pre inštaláciu - aspoň prázdny fetch handler
+  // Tento prázdny handler stačí na to, aby Chrome povolil inštaláciu
 });
