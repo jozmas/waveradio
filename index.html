@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QT4GHFHTVS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-QT4GHFHTVS');
+    </script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="robots" content="noindex, nofollow">
@@ -179,6 +188,7 @@
         const favCanvas = document.createElement('canvas'); favCanvas.width = 32; favCanvas.height = 32;
         const favCtx = favCanvas.getContext('2d'); let favRotation = 0;
 
+        // Scrolling title in browser tab
         function updatePageTitle() {
             if (titleInterval) { clearInterval(titleInterval); titleInterval = null; }
             if (state.isPlaying) {
@@ -187,6 +197,7 @@
             } else { document.title = "WaveRadio - Pure Dance & Trance"; }
         }
 
+        // Animated Disc Favicon
         function animateFavicon() {
             if (!state.isPlaying) return;
             favCtx.clearRect(0, 0, 32, 32); favCtx.save(); favCtx.translate(16, 16); favCtx.rotate(favRotation);
@@ -195,19 +206,24 @@
             favRotation += 0.15; setTimeout(animateFavicon, 100);
         }
 
+        // Initialize Audio Context and Nodes
         function initAudio() {
             if (audioCtx) return;
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             source = audioCtx.createMediaElementSource(audio);
             analyser = audioCtx.createAnalyser();
+            
+            // Equalizer Filters
             bassNode = audioCtx.createBiquadFilter(); bassNode.type = 'lowshelf'; bassNode.frequency.value = 200;
             midNode = audioCtx.createBiquadFilter(); midNode.type = 'peaking'; midNode.frequency.value = 1000;
             trebleNode = audioCtx.createBiquadFilter(); trebleNode.type = 'highshelf'; trebleNode.frequency.value = 3000;
+            
             source.connect(bassNode).connect(midNode).connect(trebleNode).connect(analyser).connect(audioCtx.destination);
             loadSavedEQ();
             drawViz();
         }
 
+        // Toggle Background Vinyl Noise
         function toggleNoise() {
             state.isNoiseOn = !state.isNoiseOn;
             if(state.isNoiseOn) {
@@ -220,6 +236,7 @@
             }
         }
 
+        // Toggle Sleep Timer (30 min)
         function toggleSleepTimer() {
             if(state.sleepTimer) {
                 clearTimeout(state.sleepTimer);
@@ -237,6 +254,7 @@
             }
         }
 
+        // Main Play/Pause Toggle
         async function togglePlay() {
             initAudio();
             if (audioCtx.state === 'suspended') await audioCtx.resume();
@@ -254,6 +272,7 @@
             render();
         }
 
+        // Play specific station or file
         async function playSource(s, addToHistory = true) {
             initAudio();
             if (audioCtx.state === 'suspended') await audioCtx.resume();
@@ -288,6 +307,7 @@
             playSource(all[(idx - 1 + all.length) % all.length]);
         }
 
+        // Add custom stream URL
         function playCustomUrl() {
             const url = document.getElementById('custom-url').value; if(!url) return;
             const ns = { id: 'c-'+Date.now(), name: "User Stream", url: url, color: "from-gray-700 to-blue-900", ambient: "#1e3a8a", isCustom: true };
@@ -295,14 +315,15 @@
             playSource(ns); document.getElementById('custom-url').value = '';
         }
 
-        // New function to remove a custom station
+        // Remove a custom station
         function removeStation(id, e) {
-            e.stopPropagation(); // Prevent playing when clicking the X
+            e.stopPropagation(); 
             customStations = customStations.filter(s => s.id !== id);
             localStorage.setItem('custom-stations', JSON.stringify(customStations));
             render();
         }
 
+        // Load local audio files
         function loadLocalFiles(e) {
             const files = Array.from(e.target.files); if (!files.length) return;
             state.localFiles = files.map(f => ({ id: 'l-'+Math.random(), name: f.name.replace(/\.[^/.]+$/, ""), url: URL.createObjectURL(f), color: "from-orange-600 to-red-900", ambient: "#ea580c" }));
@@ -311,6 +332,7 @@
         }
         function resumeLocal() { if(state.localFiles.length) playSource(state.localFiles[0]); }
 
+        // Update EQ Node values
         function updateEQ(save = true) {
             if (!bassNode) return;
             bassNode.gain.value = document.getElementById('eq-bass').value;
@@ -335,8 +357,10 @@
             updateEQ(true); 
         }
 
+        // Right-click on viz to change mode
         function nextVizMode(e) { e.preventDefault(); state.vizMode = (state.vizMode + 1) % 3; }
 
+        // Visualizer Drawing Loop
         function drawViz() {
             const canvas = document.getElementById('canvas-viz'); const ctx = canvas.getContext('2d');
             function frame() {
@@ -359,6 +383,7 @@
             frame();
         }
 
+        // Render UI based on state
         function render() {
             const all = [...STATIONS, ...customStations];
             document.getElementById('station-grid').innerHTML = all.map(s => `
@@ -384,6 +409,7 @@
             updatePageTitle(); lucide.createIcons();
         }
 
+        // Global Hotkeys
         window.onkeydown = (e) => {
             if (e.target.tagName === 'INPUT') return;
             if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
@@ -393,12 +419,14 @@
             if (e.code === 'ArrowDown') { e.preventDefault(); let nv = Math.max(0, audio.volume - 0.05); audio.volume = nv; volSlider.value = nv; }
         };
 
+        // Event Listeners
         document.getElementById('main-play-btn').onclick = () => togglePlay();
         document.getElementById('toggle-eq').onclick = (e) => { e.stopPropagation(); document.getElementById('eq-panel').classList.toggle('opacity-0'); document.getElementById('eq-panel').classList.toggle('pointer-events-none'); };
         window.onclick = (e) => { if(!document.getElementById('eq-panel').contains(e.target) && e.target.id !== 'toggle-eq') document.getElementById('eq-panel').classList.add('opacity-0', 'pointer-events-none'); };
         audio.onended = () => playNext(); 
         volSlider.oninput = (e) => audio.volume = e.target.value;
 
+        // Initialization
         window.onload = () => { render(); audio.volume = 0.7; volSlider.value = 0.7; const appHeight = () => document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`); window.addEventListener('resize', appHeight); appHeight(); };
     </script>
 </body>
