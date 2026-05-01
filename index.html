@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -370,24 +371,34 @@
             }
         }
 
-        function toggleSleepTimer() {
+function toggleSleepTimer() {
+            const sleepBtn = document.getElementById('sleep-btn');
+            
             if(state.sleepTimer) {
                 clearTimeout(state.sleepTimer);
                 state.sleepTimer = null;
-                document.getElementById('sleep-btn').classList.remove('text-purple-400');
+                sleepBtn.classList.remove('text-purple-400');
             } else {
                 state.sleepTimer = setTimeout(() => {
+                    // Zastaví zvuk
                     audio.pause();
+                    
+                    // Resetuje logický stav
                     state.isPlaying = false;
                     state.sleepTimer = null;
+                    
+                    // TENTO RIADOK CHÝBAL: Vypne fialovú ikonu po uplynutí času
+                    sleepBtn.classList.remove('text-purple-400');
+                    
+                    // Aktualizuje systémovú lištu a celé UI (ikonky, rotáciu disku)
                     if ('mediaSession' in navigator) navigator.mediaSession.playbackState = "paused";
                     render();
-                }, 30 * 60 * 1000);
-                document.getElementById('sleep-btn').classList.add('text-purple-400');
+                }, 30 * 60 * 1000); // 30 minút
+                
+                sleepBtn.classList.add('text-purple-400');
                 alert("Radio will turn off in 30 minutes");
             }
         }
-
         async function togglePlay() {
             initAudio();
             if (audioCtx.state === 'suspended') await audioCtx.resume();
