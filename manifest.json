@@ -3,10 +3,11 @@
   "name": "WaveRadio Pure",
   "short_name": "WaveRadio",
   "description": "Pure Dance & Trance Radio",
-  "start_url": "index.html",
+  "start_url": "/waveradio/index.html",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
+  "categories": ["music", "entertainment"],
   "icons": [
     {
       "src": "icon.png",
@@ -26,15 +27,13 @@
       "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png",
-      "form_factor": "wide",
-      "label": "WaveRadio Desktop"
+      "form_factor": "wide"
     },
     {
       "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png",
-      "form_factor": "narrow",
-      "label": "WaveRadio Mobile"
+      "form_factor": "narrow"
     }
   ]
 }
