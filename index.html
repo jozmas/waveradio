@@ -13,7 +13,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#000000">
     <title>WaveRadio - Pure Dance & Trance</title>
+    
+    <!-- PWA Manifest pre inštaláciu -->
+    <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIldhdmVSYWRpbyIsCiAgInNob3J0X25hbWUiOiAiV2F2ZVJhZGlvIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwMDAwMDAiLAogICJ0aGVtZV9jb2xvciI6ICIjMDAwMDAwIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsaXRpY29uLmNvbS81MTIvMzI5OS8zMjk5NTI1LnBuZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIgogICAgfQogIF0KfQ==">
+    
     <link id="favicon" rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💿</text></svg>">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -31,7 +36,7 @@
             transition: background 1.5s ease;
         }
 
-        /* Kompletné skrytie scrollbaru pre všetky prehliadače */
+        /* Kompletné skrytie scrollbaru pre všetky prehliadače (vrátane Brave na macOS) */
         .no-scrollbar {
             -ms-overflow-style: none;  /* IE/Edge */
             scrollbar-width: none;     /* Firefox */
@@ -183,6 +188,17 @@
     </footer>
 
     <script>
+        // SERVICE WORKER PRE PWA (Inštalácia)
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                self.addEventListener('install', (e) => self.skipWaiting());
+                self.addEventListener('fetch', (e) => e.respondWith(fetch(e.request)));
+            `;
+            const blob = new Blob([swCode], {type: 'text/javascript'});
+            const swUrl = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(swUrl).catch(err => console.log('SW error', err));
+        }
+
         const STATIONS = [
             { id: 4, name: "ILove Dance", url: "https://streams.ilovemusic.de/iloveradio2.mp3", color: "from-pink-600 to-blue-600", ambient: "#db2777" },
             { id: 2, name: "ILove Trance", url: "https://streams.ilovemusic.de/iloveradio10.mp3", color: "from-blue-400 to-blue-800", ambient: "#1e40af" },
