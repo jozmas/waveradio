@@ -1,6 +1,7 @@
 {
   "name": "WaveRadio Pure",
   "short_name": "WaveRadio",
+  "description": "Pure Dance & Trance Radio",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#000000",
