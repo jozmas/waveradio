@@ -1,13 +1,7 @@
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open('waveradio-v1').then((cache) => {
-      return cache.addAll(['./']);
-    })
-  );
+self.addEventListener('install', (e) => {
+  self.skipWaiting();
 });
 
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    fetch(event.request).catch(() => caches.match(event.request))
-  );
+self.addEventListener('fetch', (e) => {
+  e.respondWith(fetch(e.request));
 });
