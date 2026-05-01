@@ -1,7 +1,6 @@
 {
   "name": "WaveRadio Pure",
   "short_name": "WaveRadio",
-  "description": "Pure Dance & Trance Radio",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#000000",
@@ -10,8 +9,7 @@
     {
       "src": "https://cdn-icons-png.flaticon.com/512/1162/1162060.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ]
 }
