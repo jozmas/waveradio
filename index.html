@@ -25,12 +25,23 @@
         #ambient-glow { position: fixed; inset: 0; pointer-events: none; opacity: 0.15; transition: background 2s ease; z-index: 0; }
         .vinyl-disc { background: #111; position: relative; border: 2px solid #333; }
         .vinyl-reflection { position: absolute; inset: 0; background: conic-gradient(from 0deg, transparent 0%, rgba(255,255,255,0.1) 15%, transparent 30%, transparent 50%, rgba(255,255,255,0.1) 65%, transparent 80%); border-radius: 50%; pointer-events: none; }
+        
+        .tooltip { position: relative; }
+        .tooltip::after {
+            content: attr(data-tip);
+            position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%);
+            background: #1d4ed8; color: white; padding: 4px 8px; border-radius: 6px;
+            font-size: 10px; font-weight: bold; white-space: nowrap;
+            opacity: 0; pointer-events: none; transition: all 0.2s; z-index: 100;
+        }
+        .tooltip:hover::after { opacity: 1; bottom: 140%; }
     </style>
 </head>
 <body class="flex flex-col bg-black text-gray-100 font-sans">
     <div id="ambient-glow"></div>
     <audio id="audio-player" crossorigin="anonymous"></audio>
-    
+    <audio id="noise-player" loop src="https://www.soundjay.com/misc/sounds/record-player-static-01.mp3"></audio>
+
     <div class="flex flex-1 overflow-hidden relative z-10">
         <!-- SIDEBAR -->
         <aside class="w-16 md:w-56 bg-gray-950/80 backdrop-blur-xl border-r border-white/5 flex flex-col shrink-0 relative">
@@ -62,6 +73,7 @@
                 <p class="text-xs text-blue-500 uppercase tracking-[0.3em] mt-2 font-black">High-Energy Only</p>
             </header>
 
+            <!-- Station Grid -->
             <div id="station-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-10 xl:grid-cols-12 gap-3 mb-6"></div>
 
             <div class="mb-8 bg-white/5 border border-white/5 rounded-2xl p-4 space-y-4">
@@ -120,6 +132,7 @@
     <!-- PLAYER FOOTER -->
     <footer class="h-24 bg-gray-950/90 backdrop-blur-xl border-t border-white/10 px-4 md:px-10 flex items-center justify-between fixed bottom-0 w-full z-30">
         <div class="flex items-center gap-4 w-1/4 md:w-1/3" id="player-info"></div>
+        
         <div class="flex flex-col items-center justify-center w-2/4 md:w-1/3">
             <div class="flex items-center gap-3 md:gap-6">
                 <div class="hidden md:flex gap-1 items-end h-4 w-8 justify-end" id="bars-left"></div>
@@ -131,8 +144,17 @@
                 <div class="hidden md:flex gap-1 items-end h-4 w-8" id="bars-right"></div>
             </div>
         </div>
+
         <div class="flex items-center justify-end gap-1 md:gap-3 w-1/4 md:w-1/3">
-            <button id="toggle-eq" class="p-2 md:p-3 rounded-xl transition-all group"><i data-lucide="sliders-horizontal" class="w-5 h-5 text-gray-500 group-hover:text-blue-400"></i></button>
+            <button onclick="toggleNoise()" id="noise-btn" class="p-2 text-gray-500 hover:text-orange-400 transition-all tooltip" data-tip="Vinyl Noise Filter">
+                <i data-lucide="waves" class="w-5 h-5"></i>
+            </button>
+            <button onclick="toggleSleepTimer()" id="sleep-btn" class="p-2 text-gray-500 hover:text-purple-400 transition-all tooltip" data-tip="Sleep Timer (30 min)">
+                <i data-lucide="moon" class="w-5 h-5"></i>
+            </button>
+            <button id="toggle-eq" class="p-2 md:p-3 rounded-xl transition-all group tooltip" data-tip="Sound Equalizer">
+                <i data-lucide="sliders-horizontal" class="w-5 h-5 text-gray-500 group-hover:text-blue-400"></i>
+            </button>
             <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.7" class="hidden sm:block w-20 md:w-32 accent-blue-500">
         </div>
     </footer>
@@ -146,11 +168,14 @@
             { id: 10, name: "Hardstyle", url: "https://streams.ilovemusic.de/iloveradio5.mp3", color: "from-red-700 to-black", ambient: "#7f1d1d" }
         ];
         let customStations = JSON.parse(localStorage.getItem('custom-stations')) || [];
-        let state = { current: STATIONS[0], isPlaying: false, vizMode: 1, localFiles: [], localIndex: 0, history: [] };
+        let state = { current: STATIONS[0], isPlaying: false, vizMode: 1, localFiles: [], localIndex: 0, history: [], isNoiseOn: false, sleepTimer: null };
+        
         const audio = document.getElementById('audio-player');
+        const noiseAudio = document.getElementById('noise-player');
         const volSlider = document.getElementById('volume-slider');
         let audioCtx, source, analyser, bassNode, midNode, trebleNode;
         let titleInterval = null;
+
         const favCanvas = document.createElement('canvas'); favCanvas.width = 32; favCanvas.height = 32;
         const favCtx = favCanvas.getContext('2d'); let favRotation = 0;
 
@@ -183,11 +208,38 @@
             drawViz();
         }
 
-        // UNIFIED TOGGLE FUNCTION (Fixes Mobile Pause)
+        function toggleNoise() {
+            state.isNoiseOn = !state.isNoiseOn;
+            if(state.isNoiseOn) {
+                noiseAudio.volume = 0.15;
+                noiseAudio.play();
+                document.getElementById('noise-btn').classList.add('text-orange-400');
+            } else {
+                noiseAudio.pause();
+                document.getElementById('noise-btn').classList.remove('text-orange-400');
+            }
+        }
+
+        function toggleSleepTimer() {
+            if(state.sleepTimer) {
+                clearTimeout(state.sleepTimer);
+                state.sleepTimer = null;
+                document.getElementById('sleep-btn').classList.remove('text-purple-400');
+                alert("Sleep timer cancelled");
+            } else {
+                state.sleepTimer = setTimeout(() => {
+                    audio.pause();
+                    state.isPlaying = false;
+                    render();
+                }, 30 * 60 * 1000);
+                document.getElementById('sleep-btn').classList.add('text-purple-400');
+                alert("Radio will turn off in 30 minutes");
+            }
+        }
+
         async function togglePlay() {
             initAudio();
             if (audioCtx.state === 'suspended') await audioCtx.resume();
-            
             if (state.isPlaying) {
                 audio.pause();
                 state.isPlaying = false;
@@ -205,7 +257,6 @@
         async function playSource(s, addToHistory = true) {
             initAudio();
             if (audioCtx.state === 'suspended') await audioCtx.resume();
-            
             if (state.current.url === s.url && state.isPlaying) {
                 audio.pause();
                 state.isPlaying = false;
@@ -244,6 +295,14 @@
             playSource(ns); document.getElementById('custom-url').value = '';
         }
 
+        // New function to remove a custom station
+        function removeStation(id, e) {
+            e.stopPropagation(); // Prevent playing when clicking the X
+            customStations = customStations.filter(s => s.id !== id);
+            localStorage.setItem('custom-stations', JSON.stringify(customStations));
+            render();
+        }
+
         function loadLocalFiles(e) {
             const files = Array.from(e.target.files); if (!files.length) return;
             state.localFiles = files.map(f => ({ id: 'l-'+Math.random(), name: f.name.replace(/\.[^/.]+$/, ""), url: URL.createObjectURL(f), color: "from-orange-600 to-red-900", ambient: "#ea580c" }));
@@ -272,9 +331,7 @@
         }
 
         function setPreset(b,m,t) { 
-            document.getElementById('eq-bass').value = b; 
-            document.getElementById('eq-mid').value = m; 
-            document.getElementById('eq-treble').value = t; 
+            document.getElementById('eq-bass').value = b; document.getElementById('eq-mid').value = m; document.getElementById('eq-treble').value = t; 
             updateEQ(true); 
         }
 
@@ -304,11 +361,13 @@
 
         function render() {
             const all = [...STATIONS, ...customStations];
-            document.getElementById('station-grid').innerHTML = all.map(s => `<div onclick='playSource(${JSON.stringify(s)})' class="cursor-pointer group relative">
-                <div class="relative aspect-square rounded-lg bg-gradient-to-br ${s.color} border ${state.current.url === s.url ? 'border-white' : 'border-white/5'} transition-all">
+            document.getElementById('station-grid').innerHTML = all.map(s => `
+            <div onclick='playSource(${JSON.stringify(s)})' class="cursor-pointer group relative">
+                <div class="relative aspect-square rounded-lg bg-gradient-to-br ${s.color} border ${state.current.url === s.url ? 'border-white' : 'border-white/5'} transition-all overflow-hidden">
+                    ${s.isCustom ? `<button onclick="removeStation('${s.id}', event)" class="absolute top-1 right-1 z-20 p-1 bg-black/50 rounded-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600/80"><i data-lucide="x" class="w-3 h-3"></i></button>` : ''}
                     <div class="absolute inset-0 flex items-center justify-center opacity-20"><i data-lucide="disc-3" class="w-10 h-10 ${state.isPlaying && state.current.url === s.url ? 'rotating' : ''}"></i></div>
                 </div>
-                <h3 class="text-[8px] font-bold text-center mt-1 uppercase text-gray-400 truncate">${s.name}</h3>
+                <h3 class="text-[8px] font-bold text-center mt-1 uppercase text-gray-400 truncate px-1">${s.name}</h3>
             </div>`).join('');
             
             const historyData = JSON.parse(localStorage.getItem('recent-history')) || [];
