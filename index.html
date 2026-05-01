@@ -256,15 +256,23 @@
         </div>
     </footer>
 
-    <script>
-        // SERVICE WORKER FOR PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('Service Worker beží!', reg))
-                    .catch(err => console.log('Chyba SW:', err));
-            });
-        }
+   <script>
+    // SERVICE WORKER REGISTRATION FOR PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            // Adding a version query forces the browser to look for a new version
+            navigator.serviceWorker.register('sw.js?v=1.1')
+                .then(reg => {
+                    console.log('Service Worker registered successfully!', reg);
+                    // Check for updates immediately
+                    reg.update();
+                })
+                .catch(err => {
+                    console.error('Service Worker registration failed:', err);
+                });
+        });
+    }
+</script>
 
         const STATIONS = [
             { id: 4, name: "ILove Dance", url: "https://streams.ilovemusic.de/iloveradio2.mp3", color: "from-pink-600 to-blue-600", ambient: "#db2777" },
